@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<head>
+    <title>Example usage of navigator.js</title>
+    <script src="navigator.js"></script>
+
+    <!-- 1. Specify some styles for active and inactive pages and menu items: -->
+    <style>
+        a.active {
+            font-weight: bold;
+        }
+
+        section.content > div {
+            display: none;
+        }
+
+        section.content > div.active {
+            display: block;
+        }
+    </style>
+
+    <script>
+        // 2. implement hooks that, given pageData, will alter page state the way you want to:
+        function activate(pageData) {
+            pageData.menuElement.classList.add("active");
+            pageData.pageElement.classList.add("active");
+            location.hash = pageData.pageElement.id;
+        }
+
+        function deactivate(pageData) {
+            pageData.menuElement.classList.remove("active");
+            pageData.pageElement.classList.remove("active");
+        }
+
+        let navigator;
+
+        window.addEventListener('DOMContentLoaded', (event) => {
+            // 3. specify whatever you want to have in your pageData
+            // (this data will be passed to your hooks every time the page changes):
+            let pages = {
+                "home-page": {
+                    "menuElement": document.getElementById("home-menu"),
+                    "pageElement": document.getElementById("home-page")
+                },
+                "about-page": {
+                    "menuElement": document.getElementById("about-menu"),
+                    "pageElement": document.getElementById("about-page")
+                },
+                "team-page": {
+                    "menuElement": document.getElementById("team-menu"),
+                    "pageElement": document.getElementById("team-page")
+                }
+            };
+
+            // 4. specify what page should be opened when site is loaded:
+            initialPage = location.hash ? location.hash.substring(1) : "home-page";
+
+            // 5. the navigator will set up event listeners for you:
+            navigator = new Navigator({
+                "pages": pages,
+                "activate": activate, 
+                "deactivate": deactivate, 
+                "initialPage": initialPage
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <nav class="menu">
+        <p>Select page:</p>
+        <ul>
+            <li><a href="#home-page", id="home-menu">Home</a></li>
+            <li><a href="#about-page", id="about-menu">About</a></li>
+            <li><a href="#team-page", id="team-menu">Team</a></li>
+        </ul>
+    </nav>
+    <section class="content">
+        <p>Selected page content will appear below:</p>
+        <div class="nav-page" id="home-page">
+            <h1>Home</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam distinctio dolore cum ea odio harum, quod est quas nulla sunt labore! Eos praesentium obcaecati quia aut neque tempora atque nesciunt!</p>
+        </div>
+
+        <div class="nav-page" id="about-page">
+            <h1>About</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam distinctio dolore cum ea odio harum, quod est quas nulla sunt labore! Eos praesentium obcaecati quia aut neque tempora atque nesciunt!</p>
+        </div>
+
+        <div class="nav-page" id="team-page">
+            <h1>Team</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam distinctio dolore cum ea odio harum, quod est quas nulla sunt labore! Eos praesentium obcaecati quia aut neque tempora atque nesciunt!</p>
+        </div>
+    </section>
+
+</body>
