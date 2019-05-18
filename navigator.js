@@ -32,7 +32,9 @@ class Navigator {
         // handle change of location.hash by user (in the browser address bar)
         let partiallyBoundHandler = this.selectId.bind(this);
         window.addEventListener("hashchange", event => {
+            event.preventDefault();
             partiallyBoundHandler(location.hash.substring(1));
+            return false;
         });
     }
 
